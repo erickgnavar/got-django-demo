@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import House
+from .models import House, Character
 
 
 def home(request):
@@ -15,3 +15,13 @@ def house_detail(request, house_id):
     return render(request, 'characters/house_detail.html', {
         'house': house
     })
+
+
+def character_action(request, house_id, character_id, action):
+    character = get_object_or_404(Character, id=character_id)
+    if action == 'like':
+        character.likes += 1
+    else:
+        character.dislikes += 1
+    character.save()
+    return redirect('house_detail', house_id=house_id)
